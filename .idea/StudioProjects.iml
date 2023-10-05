@@ -9,6 +9,21 @@
       <excludeFolder url="file://$MODULE_DIR$/test1/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/test1/build" />
       <excludeFolder url="file://$MODULE_DIR$/test1/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/week3_2/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/week3_2/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/week3_2/build" />
+      <excludeFolder url="file://$MODULE_DIR$/async3/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/async3/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/async3/build" />
+      <excludeFolder url="file://$MODULE_DIR$/web_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/web_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/web_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/week5/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/week5/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/week5/build" />
+      <excludeFolder url="file://$MODULE_DIR$/week3/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/week3/build" />
+      <excludeFolder url="file://$MODULE_DIR$/week3/.dart_tool" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
