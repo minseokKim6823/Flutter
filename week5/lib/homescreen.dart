@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget{
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Scaffold(
       body: PageView(
-        children: [1,2,3,4,5]
+        children: [1,2,3,4,5,6]
           .map(
               (number) => Image.asset('asset/img/img$number.jpg',
               fit:BoxFit.cover,
