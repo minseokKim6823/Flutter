@@ -6,20 +6,25 @@ void main() {
     MaterialApp(
       theme: ThemeData(
           fontFamily: 'sunflower',
-          textTheme:const TextTheme(
-            displayLarge: const TextStyle(
-                color: Colors.white,
-                fontSize: 30.0
+          textTheme: TextTheme(
+            headline1: TextStyle(
+              color: Colors.white,
+              fontSize: 80.0,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'parisienne',
             ),
-            displaySmall: TextStyle(
-              color: Colors.white,fontSize: 25.0,
+            headline2: TextStyle(
+              color: Colors.white,
+              fontSize: 50.0,
               fontWeight: FontWeight.w700,
             ),
-            bodyLarge: TextStyle(
-              color: Colors.white,fontSize: 30.0,
+            bodyText1: TextStyle(
+              color: Colors.white,
+              fontSize: 30.0,
             ),
-            bodySmall: TextStyle(
-              color:Colors.white,fontSize: 20.0,
+            bodyText2: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
             ),
           )
       ),
