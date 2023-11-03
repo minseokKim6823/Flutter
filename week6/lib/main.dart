@@ -20,7 +20,7 @@ void main() {
             ),
             bodyText1: TextStyle(
               color: Colors.white,
-              fontSize: 30.0,
+              fontSize: 40.0,
             ),
             bodyText2: TextStyle(
               color: Colors.white,

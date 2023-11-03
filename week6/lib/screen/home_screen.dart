@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:week6/screen/video_page.dart';
+import 'dart:math';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -13,26 +18,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.pink[100],
-        body: SafeArea(
-          top: true,
-          bottom: false,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _DDay(
-                //하트 눌렀을때 실행할 함수 전달하기
-                onHeartPressed: onHeartPressed,
-                firstDay: firstDay,
-              ),
-              _GersImage(),
-            ],
-          ),
-        ));
+      backgroundColor: Colors.green[100],
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _DDay(
+              onCakePressed: onCakePressed,
+              firstDay: firstDay,
+            ),
+            _CharImage(
+              onImageClicked1: onImageClicked1,
+              onImageClicked2: onImageClicked2,
+              onImageClicked3: onImageClicked3,
+            ),// 이미지 클릭 핸들러 추가
+          ],
+        ),
+      ),
+    );
   }
 
-  void onHeartPressed() {
+  void onCakePressed() {
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
@@ -55,26 +64,59 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: true,
     );
   }
+
+  // 이미지 클릭 핸들러
+  void onImageClicked1() {
+    setState(() {
+      firstDay = DateTime(
+        2013,
+        12,
+        31,
+      );
+
+    });
+  }
+
+  // 두 번째 이미지 클릭 핸들러
+  void onImageClicked2() {
+    setState(() {
+      firstDay = DateTime(
+        2013,
+        12,
+        28,
+      );
+    });
+  }
+  void onImageClicked3() {
+    setState(() {
+      final random = Random();
+      // 'firstDay' 값을 랜덤한 날짜로 변경
+      firstDay = DateTime(
+        2018, 8, 8,
+      );
+    });
+  }
 }
 
-class _DDay extends StatelessWidget{
-  final GestureTapCallback onHeartPressed;
+class _DDay extends StatelessWidget {
+  final GestureTapCallback onCakePressed;
   final DateTime firstDay;
 
   _DDay({
-    required this.onHeartPressed,
+    required this.onCakePressed,
     required this.firstDay,
   });
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final now =DateTime.now();
+    final now = DateTime.now();
     return Column(
       children: [
-        const SizedBox(height:20.0),
+        const SizedBox(height: 20.0),
         Text(
-          '우리 처음 만난 날',
-          style:  textTheme.bodyText1,
+          '숲속 마을 친구들 탄신일',
+          style: textTheme.bodyText1,
         ),
         Text(
           '${firstDay.year}.${firstDay.month}.${firstDay.day}',
@@ -82,27 +124,42 @@ class _DDay extends StatelessWidget{
         ),
         const SizedBox(height: 16.0),
         IconButton(
-          iconSize:50.0,
-          onPressed: onHeartPressed,
+          iconSize: 50.0,
+          onPressed: onCakePressed,
           icon: Icon(
-            Icons.favorite,
+            Icons.cake,
             color: Colors.red,
           ),
         ),
         const SizedBox(height: 1.0),
         Text(
-          'D+${DateTime(now.year,now.month,now.day).difference(firstDay).inDays+1}',
-
+          'D+${DateTime(now.year, now.month, now.day).
+          difference(firstDay).inDays + 1}',
           style: textTheme.headline2,
         ),
       ],
     );
   }
 }
-class _GersImage extends StatelessWidget {
+
+class _CharImage extends StatelessWidget {
+  final VoidCallback onImageClicked1;
+  final VoidCallback onImageClicked2;
+  final VoidCallback onImageClicked3;
+
+
+  _CharImage({
+    required this.onImageClicked1,
+    required this.onImageClicked2,
+    required this.onImageClicked3,
+  });
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width ~/ 2;
+    final width = MediaQuery
+        .of(context)
+        .size
+        .width ~/ 2;
     final smallWidth = width / 2;
     return Column(
       children: <Widget>[
@@ -110,14 +167,14 @@ class _GersImage extends StatelessWidget {
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: 450.0, // 원하는 높이 설정
-              color: Colors.pink[100], // 배경색 설정
+              height: 400.0, // 원하는 높이 설정
             ),
             Positioned(
-              bottom: 310, // 아래로 이동 (높이 조정)
+              bottom: 0, // 아래로 이동 (높이 조정)
               left: 0, // 왼쪽으로 이동
               right: 0, // 오른쪽으로 이동
-              child: makeRow('asset/img/crong.png', 'asset/img/petty.png', 'asset/img/pororo.png', rowWidth: width / 1.5.toDouble()),
+              child: makeRow('asset/img/crong.png', 'asset/img/petty.png',
+                  'asset/img/pororo.png', rowWidth: width / 1.5.toDouble()),
             ),
           ],
         ),
@@ -125,21 +182,48 @@ class _GersImage extends StatelessWidget {
     );
   }
 
-  Widget makeRow(String leftPath, String centerPath, String rightPath, {double rowWidth = 12.0}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center, // 이미지 중앙 정렬
+  Widget makeRow(String leftPath, String centerPath, String rightPath,
+      {double rowWidth = 12.0}) {
+    return Column(
       children: <Widget>[
-        Container(
-          child: Image.asset(leftPath, width: rowWidth - 10, height: rowWidth - 10),
-          padding: EdgeInsets.all(5.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            GestureDetector(
+              onTap: onImageClicked1, // 이미지 클릭 시 onImageClicked1 함수 호출
+              child: Container(
+                child: Image.asset(
+                    leftPath, width: rowWidth - 10, height: rowWidth - 10),
+                padding: EdgeInsets.all(5.0),
+              ),
+            ),
+            GestureDetector(
+              onTap: onImageClicked2, // 이미지 클릭 시 onImageClicked2 함수 호출
+              child: Container(
+                child: Image.asset(
+                    centerPath, width: rowWidth - 10, height: rowWidth - 10),
+                padding: EdgeInsets.all(5.0),
+              ),
+            ),
+            GestureDetector(
+              onTap: onImageClicked3, // 이미지 클릭 시 onImageClicked3 함수 호출
+              child: Container(
+                child: Image.asset(
+                    rightPath, width: rowWidth - 10, height: rowWidth - 10),
+                padding: EdgeInsets.all(5.0),
+              ),
+            ),
+          ],
+        ),
+        Text(
+          '아래화면 클릭 시 실행 됩니다',
+          style: TextStyle(color: Colors.black,fontSize:30),
         ),
         Container(
-          child: Image.asset(centerPath, width: rowWidth - 10, height: rowWidth - 10),
-          padding: EdgeInsets.all(5.0),
-        ),
-        Container(
-          child: Image.asset(rightPath, width: rowWidth - 10, height: rowWidth - 10),
-          padding: EdgeInsets.all(5.0),
+          child: VideoPage(
+              videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'),
+          width: rowWidth + 280,
+          height: rowWidth + 80,
         ),
       ],
     );
