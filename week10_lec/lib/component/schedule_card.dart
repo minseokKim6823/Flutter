@@ -24,6 +24,25 @@ class ScheduleCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(8.0),
       ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: IntrinsicHeight( // ➊ 높이를 내부 위젯들의 최대 높이로 설정
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Time( // ➋ 시작과 종료 시간을 보여줄 위젯
+                startTime: startTime,
+                endTime: endTime,
+              ),
+              SizedBox(width: 16.0),
+              _Content( // ➌ 일정 내용을 보여줄 위젯
+                content: content,
+              ),
+              SizedBox(width: 16.0),
+            ],
+          )
+        )
+      ),
     );
   }
 }
@@ -31,12 +50,10 @@ class ScheduleCard extends StatelessWidget {
 class _Time extends StatelessWidget{
   final int startTime;
   final int endTime;
-  final String content;
 
   const _Time({
     required this.startTime,
     required this.endTime,
-    required this.content,
     Key? key,
   }) : super(key: key);
 
