@@ -5,6 +5,29 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+Future<void> fetchData() async {
+  final response = await http.get(Uri.parse('http://localhost:8080/api/visitor/count'));
+  if (response.statusCode == 200) {
+    // 성공적으로 데이터를 가져옴
+    final data = json.decode(response.body); // JSON 데이터를 Dart 객체로 변환
+
+    // 데이터를 사용
+    final count = data['count'];
+    final pBorn = data['c_born'];
+    final cBorn = data['c_born'];
+    final lBorn = data['l_born'];
+
+    // 예시: 데이터를 화면에 출력
+    print('Count: $count');
+    print('P Born: $pBorn');
+    print('C Born: $cBorn');
+    print('L Born: $lBorn');
+  } else {
+    // 데이터 가져오기에 실패
+    throw Exception('Failed to load data');
+  }
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -14,6 +37,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime firstDay = DateTime.now();
+  String cBorn = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // fetchData 함수를 호출하여 pBorn 값을 설정
+    fetchData();
+  }
+
+  // fetchData 함수로 API에서 데이터를 가져오고 pBorn 값을 설정
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/api/visitor/count'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        DateTime cBorn = DateTime.parse(data['c_born']);
+      });
+    } else {
+      // 데이터 가져오기에 실패
+      throw Exception('Failed to load data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onImageClicked1: onImageClicked1,
               onImageClicked2: onImageClicked2,
               onImageClicked3: onImageClicked3,
+              pBorn: cBorn,// 변수 전달: lBorn
             ),// 이미지 클릭 핸들러 추가
           ],
         ),
@@ -68,12 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // 이미지 클릭 핸들러
   void onImageClicked1() {
     setState(() {
-      firstDay = DateTime(
-        2013,
-        12,
-        31,
-      );
-
+      firstDay = pBorn;
     });
   }
 
@@ -146,12 +187,13 @@ class _CharImage extends StatelessWidget {
   final VoidCallback onImageClicked1;
   final VoidCallback onImageClicked2;
   final VoidCallback onImageClicked3;
-
+  final String pBorn;
 
   _CharImage({
     required this.onImageClicked1,
     required this.onImageClicked2,
     required this.onImageClicked3,
+    required this.pBorn,
   });
 
   @override
