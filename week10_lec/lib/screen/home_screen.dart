@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:week10_lec/component/main_calendar.dart';
 import 'package:week10_lec/component/schedule_card.dart';
+import 'package:week10_lec/component/today_banner.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) :super(key: key);
 
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 selectedDate: selectedDate,
                 onDaySelected: onDaySelected,
             ),
+            SizedBox(height: 8.0),
             ScheduleCard(startTime: 12, endTime: 14, content: '스모프 학습'),
           ]
         )
