@@ -1,6 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:week10_lec/const/colors.dart';
 
+class ScheduleCard extends StatelessWidget {
+  final int startTime;
+  final int endTime;
+  final String content;
+
+  const ScheduleCard({
+    required this.startTime,
+    required this.endTime,
+    required this.content,
+    Key? key,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1.0,
+          color: PRIMARY_COLOR,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+  }
+}
+
 class _Time extends StatelessWidget{
   final int startTime;
   final int endTime;
