@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:week10_lec/const/colors.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ScheduleCard extends StatefulWidget {
   final int startTime;
@@ -111,13 +111,26 @@ class _ScheduleCardState extends State<ScheduleCard> {
     }
   }
 
-  void _addCurrentUserEmail() {
+  void _addCurrentUserEmail() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       String currentUserEmail = user.email!;
-      if (!_loggedInUserEmails.contains(currentUserEmail)) {
-        _loggedInUserEmails.add(currentUserEmail);
+
+      // Firestore에서 데이터 가져오기
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
+
+      // 현재 로그인된 이메일이 이미 리스트에 있는지 확인
+      List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []);
+      if (!existingEmails.contains(currentUserEmail)) {
+        existingEmails.add(currentUserEmail);
         print("참여한 사용자 이메일 추가: $currentUserEmail");
+
+        // Firestore에 업데이트된 데이터 저장
+        await FirebaseFirestore.instance
+            .collection('loggedInUsers')
+            .doc(user.uid)
+            .set({'emails': existingEmails});
       } else {
         // Show a dialog when the email is already in the list
         showDialog(
@@ -152,16 +165,41 @@ class _Members extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Future<int> _getNumberOfMembers() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Firestore에서 데이터 가져오기
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
+
+      // 현재 저장된 데이터의 갯수 반환
+      List<String>? emails = snapshot.data()?['emails']?.cast<String>();
+      return emails?.length ?? 0;
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
-    String userList = loggedInUserEmails.join(', ');
-    return Positioned(
-      child: Text(
-        '멤버 수: ${loggedInUserEmails.length} 명 (최대 10명)}',
-        style: TextStyle(
-          color: PRIMARY_COLOR,
-        ),
-      ),
+    return FutureBuilder<int>(
+      future: _getNumberOfMembers(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // 데이터 로딩 중에는 로딩 인디케이터를 보여줄 수 있습니다.
+        } else if (snapshot.hasError) {
+          return Text('에러 발생: ${snapshot.error}');
+        } else {
+          int numberOfMembers = snapshot.data ?? 0;
+          return Positioned(
+            child: Text(
+              '멤버 수: $numberOfMembers 명 (최대 10명)',
+              style: TextStyle(
+                color: PRIMARY_COLOR,
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
