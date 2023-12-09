@@ -1,6 +1,5 @@
 class ScheduleModel {
   final String id;
-  final int member;
   final String content;
   final DateTime date;
   final int startTime;
@@ -8,7 +7,6 @@ class ScheduleModel {
 
   ScheduleModel({
     required this.id,
-    required this.member,
     required this.content,
     required this.date,
     required this.startTime,
@@ -18,7 +16,6 @@ class ScheduleModel {
   ScheduleModel.fromJson({ // ➊ JSON으로부터 모델을 만들어내는 생성자
     required Map<String, dynamic> json,
   })  : id = json['id'],
-        member=json['member'],
         content = json['content'],
         date = DateTime.parse(json['date']),
         startTime = json['startTime'],
@@ -27,7 +24,6 @@ class ScheduleModel {
   Map<String, dynamic> toJson() {  // ➋ 모델을 다시 JSON으로 변환하는 함수
     return {
       'id': id,
-      'member':member,
       'content': content,
       'date':
       '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}',
@@ -38,7 +34,6 @@ class ScheduleModel {
 
   ScheduleModel copyWith({  // ➌ 현재 모델을 특정 속성만 변환해서 새로 생성
     String? id,
-    int? member,
     String? content,
     DateTime? date,
     int? startTime,
@@ -46,7 +41,6 @@ class ScheduleModel {
   }) {
     return ScheduleModel(
       id: id ?? this.id,
-      member: member ?? this.member,
       content: content ?? this.content,
       date: date ?? this.date,
       startTime: startTime ?? this.startTime,

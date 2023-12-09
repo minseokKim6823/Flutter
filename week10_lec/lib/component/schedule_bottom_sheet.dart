@@ -278,7 +278,6 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
 
     final schedule = ScheduleModel(
       id: Uuid().v4(),
-      member: member ?? 1,
       content: content!,
       date: widget.selectedDate,
       startTime: startTime!,
@@ -293,8 +292,8 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
         .doc(schedule.id)
         .set(schedule.toJson());
 
-    Navigator.of(context).pop();
-  }
+      Navigator.of(context).pop();
+    }
   }
 
   String? timeValidator(String? val) {

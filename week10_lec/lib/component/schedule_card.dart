@@ -5,13 +5,11 @@ class ScheduleCard extends StatelessWidget {
   final int startTime;
   final int endTime;
   final String content;
-  final int member;
 
   const ScheduleCard({
     required this.startTime,
     required this.endTime,
     required this.content,
-    required this.member,
     Key? key,
   }) : super(key: key);
 
@@ -27,29 +25,32 @@ class ScheduleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: IntrinsicHeight( // ➊ 높이를 내부 위젯들의 최대 높이로 설정
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Time( // ➋ 시작과 종료 시간을 보여줄 위젯
-                startTime: startTime,
-                endTime: endTime,
-              ),
-              SizedBox(width: 16.0),
-              _Content( // ➌ 일정 내용을 보여줄 위젯
-                content: content,
-              ),
-              SizedBox(width: 16.0),
-              _Members(members: member),
-            ],
+          padding: const EdgeInsets.all(16.0),
+          child: IntrinsicHeight( // ➊ 높이를 내부 위젯들의 최대 높이로 설정
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _Time( // ➋ 시작과 종료 시간을 보여줄 위젯
+                    startTime: startTime,
+                    endTime: endTime,
+                  ),
+                  SizedBox(width: 16.0),
+                  _Content( // ➌ 일정 내용을 보여줄 위젯
+                    content: content,
+                  ),
+                  SizedBox(width: 16.0),
+                  //_Members(member: member),
+                ],
+              )
           )
-        )
       ),
     );
   }
+
+  static fromJson({required Map<String, dynamic> json}) {}
 }
-class _Members extends StatelessWidget {
+/*
+class _Member extends StatelessWidget {
   final int members; // ➊ 멤버 수 추가
 
   const _Members({
@@ -69,7 +70,7 @@ class _Members extends StatelessWidget {
     );
   }
 }
-
+*/
 class _Time extends StatelessWidget{
   final int startTime;
   final int endTime;
@@ -107,6 +108,7 @@ class _Time extends StatelessWidget{
 
 class _Content extends StatelessWidget {
   final String content; // ➊ 내용
+
   const _Content({
     required this.content,
     Key? key,

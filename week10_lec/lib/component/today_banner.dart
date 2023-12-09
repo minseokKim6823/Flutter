@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:week10_lec/const/colors.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TodayBanner extends StatelessWidget {
   final DateTime selectedDate; // ➊ 선택된 날짜
@@ -18,6 +19,7 @@ class TodayBanner extends StatelessWidget {
       fontWeight: FontWeight.w600,
       color: Colors.white,
     );
+
     return Container(
       color: PRIMARY_COLOR,
       child: Padding(
@@ -25,6 +27,7 @@ class TodayBanner extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+
             Text(
               '${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일', // “년 월 일” 형태로 표시
               style: textStyle,
