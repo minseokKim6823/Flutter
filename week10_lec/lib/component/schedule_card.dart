@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:week10_lec/const/colors.dart';
 
-class ScheduleCard extends StatelessWidget {
+class ScheduleCard extends StatefulWidget {
   final int startTime;
   final int endTime;
+  final int member;
   final String content;
 
   const ScheduleCard({
     required this.startTime,
     required this.endTime,
     required this.content,
+    required this.member,
     Key? key,
   }) : super(key: key);
 
+  @override
+  _ScheduleCardState createState() => _ScheduleCardState();
+}
+
+class _ScheduleCardState extends State<ScheduleCard> {
+  int _membersCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,33 +33,63 @@ class ScheduleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: IntrinsicHeight( // ➊ 높이를 내부 위젯들의 최대 높이로 설정
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _Time( // ➋ 시작과 종료 시간을 보여줄 위젯
-                    startTime: startTime,
-                    endTime: endTime,
-                  ),
-                  SizedBox(width: 16.0),
-                  _Content( // ➌ 일정 내용을 보여줄 위젯
-                    content: content,
-                  ),
-                  SizedBox(width: 16.0),
-                  //_Members(member: member),
-                ],
-              )
-          )
+        padding: const EdgeInsets.all(16.0),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Time(
+                startTime: widget.startTime,
+                endTime: widget.endTime,
+              ),
+              SizedBox(width: 16.0),
+              _Content(
+                content: widget.content,
+              ),
+              SizedBox(width: 16.0),
+              _Members(members: _membersCount),
+              SizedBox(width: 16.0),
+              ElevatedButton(
+                onPressed: () => _incrementMembers(context),
+                child: Text('참여하기'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  static fromJson({required Map<String, dynamic> json}) {}
+  void _incrementMembers(BuildContext context) {
+    if (_membersCount < 10) {
+      setState(() {
+        _membersCount++;
+      });
+    } else {
+      // Show a dialog when the limit is reached
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('최대 인원 초과'),
+            content: Text('현재 최대 참여 가능한 인원은 10명입니다.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('확인'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
-/*
-class _Member extends StatelessWidget {
-  final int members; // ➊ 멤버 수 추가
+
+class _Members extends StatelessWidget {
+  final int members;
 
   const _Members({
     required this.members,
@@ -70,8 +108,8 @@ class _Member extends StatelessWidget {
     );
   }
 }
-*/
-class _Time extends StatelessWidget{
+
+class _Time extends StatelessWidget {
   final int startTime;
   final int endTime;
 
@@ -88,15 +126,15 @@ class _Time extends StatelessWidget{
       color: PRIMARY_COLOR,
       fontSize: 16.0,
     );
-    return Column( // ➌ 시간을 위에서 아래로 배치
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${startTime.toString().padLeft(2, '0')}:00', // 숫자가 두 자리수가 안 되면 0으로 채워주기
+          '${startTime.toString().padLeft(2, '0')}:00',
           style: textStyle,
         ),
         Text(
-          '${endTime.toString().padLeft(2, '0')}:00', // 숫자가 두 자리수가 안 되면 0으로 채워주기
+          '${endTime.toString().padLeft(2, '0')}:00',
           style: textStyle.copyWith(
             fontSize: 10.0,
           ),
@@ -107,7 +145,7 @@ class _Time extends StatelessWidget{
 }
 
 class _Content extends StatelessWidget {
-  final String content; // ➊ 내용
+  final String content;
 
   const _Content({
     required this.content,
@@ -116,114 +154,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded( // ➋ 최대한 넓게 늘리기
-      child: Text(
-        content,
-      ),
+    return Expanded(
+      child: Text(content),
     );
   }
 }
-// import 'package:week10_lec/const/colors.dart';
-// import 'package:flutter/material.dart';
-//
-// class ScheduleCard extends StatelessWidget {
-//   final int startTime;
-//   final int endTime;
-//   final String content;
-//   final int member;
-//
-//   const ScheduleCard({
-//     required this.member,
-//     required this.startTime,
-//     required this.endTime,
-//     required this.content,
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         border: Border.all(
-//           width: 1.0,
-//           color: PRIMARY_COLOR,
-//         ),
-//         borderRadius: BorderRadius.circular(8.0),
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: IntrinsicHeight(  // ➊ 높이를 내부 위젯들의 최대 높이로 설정
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               _Time(   // ➋ 시작과 종료 시간을 보여줄 위젯
-//                 startTime: startTime,
-//                 endTime: endTime,
-//               ),
-//               SizedBox(width: 16.0),
-//               _Content(   // ➌ 일정 내용을 보여줄 위젯
-//                 content: content,
-//               ),
-//               SizedBox(width: 16.0),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-//
-// class _Time extends StatelessWidget {
-//   final int startTime;  // ➊ 시작 시간
-//   final int endTime;    // ➋ 종료 시간
-//
-//   const _Time({
-//     required this.startTime,
-//     required this.endTime,
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final textStyle = TextStyle(
-//       fontWeight: FontWeight.w600,
-//       color: PRIMARY_COLOR,
-//       fontSize: 16.0,
-//     );
-//
-//     return Column(  // ➌ 시간을 위에서 아래로 배치
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(
-//           '${startTime.toString().padLeft(2, '0')}:00',  // 숫자가 두 자리수가 안 되면 0으로 채워주기
-//           style: textStyle,
-//         ),
-//         Text(
-//           '${endTime.toString().padLeft(2, '0')}:00', // 숫자가 두 자리수가 안 되면 0으로 채워주기
-//           style: textStyle.copyWith(
-//             fontSize: 10.0,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-//
-// class _Content extends StatelessWidget {
-//   final String content;  // ➊ 내용
-//
-//   const _Content({
-//     required this.content,
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(  // ➋ 최대한 넓게 늘리기
-//       child: Text(
-//         content,
-//       ),
-//     );
-//   }
-// }
