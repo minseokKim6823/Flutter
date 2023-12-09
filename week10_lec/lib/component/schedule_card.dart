@@ -73,6 +73,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
               SizedBox(width: 16.0),
               ElevatedButton(
                 onPressed: () => _incrementMembers(context),
+
                 child: Text('참여하기'),
 
               ),
@@ -86,7 +87,6 @@ class _ScheduleCardState extends State<ScheduleCard> {
   void _incrementMembers(BuildContext context) {
     if (_membersCount < 10) {
       setState(() {
-        _membersCount++;
         _addCurrentUserEmail();
       });
     } else {
@@ -100,9 +100,11 @@ class _ScheduleCardState extends State<ScheduleCard> {
             actions: [
               TextButton(
                 onPressed: () {
+
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 child: Text('확인'),
+
               ),
             ],
           );
@@ -118,7 +120,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
 
       // Firestore에서 데이터 가져오기
       DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
+          await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
 
       // 현재 로그인된 이메일이 이미 리스트에 있는지 확인
       List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []);
@@ -131,6 +133,9 @@ class _ScheduleCardState extends State<ScheduleCard> {
             .collection('loggedInUsers')
             .doc(user.uid)
             .set({'emails': existingEmails});
+        setState(() {
+          _membersCount++;
+        });
       } else {
         // Show a dialog when the email is already in the list
         showDialog(
@@ -192,6 +197,7 @@ class _Members extends StatelessWidget {
           int numberOfMembers = snapshot.data ?? 0;
           return Positioned(
             child: Text(
+
               '멤버 수: $numberOfMembers 명 (최대 10명)',
               style: TextStyle(
                 color: PRIMARY_COLOR,
