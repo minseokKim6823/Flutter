@@ -5,7 +5,6 @@ class ScheduleModel {
   final int startTime;
   final int endTime;
   final int member;
-
   ScheduleModel({
     required this.id,
     required this.content,
