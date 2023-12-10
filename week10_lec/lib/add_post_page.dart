@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class AddPostPage extends StatefulWidget {
+  @override
+  _AddPostPageState createState() => _AddPostPageState();
+}
+
+class _AddPostPageState extends State<AddPostPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bodyController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Post'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(labelText: 'Title'),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _bodyController,
+                maxLines: 4,
+                decoration: InputDecoration(labelText: 'Body'),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Password'),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Check if password is valid (for example, at least 6 characters)
+                  if (_passwordController.text.length >= 6) {
+                    // Save post data to Firestore with password
+                    FirebaseFirestore.instance.collection('posts').add({
+                      'title': _titleController.text,
+                      'body': _bodyController.text,
+                      'password': _passwordController.text,
+                    });
+
+                    // Navigate back to the previous screen
+                    Navigator.pop(context);
+                  } else {
+                    // Show an error message or alert for an invalid password
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('비밀번호는 최소 6자 이상이어야 합니다.'),
+                      ),
+                    );
+                  }
+                },
+                child: Text('Save Post'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
