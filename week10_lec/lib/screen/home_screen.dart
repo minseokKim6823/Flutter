@@ -9,7 +9,7 @@ import 'package:week10_lec/model/schedule_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:week10_lec/screen/login_screen.dart';
 import 'package:week10_lec/add_post_page.dart';
-
+import 'package:week10_lec/screen/ChatScreen.dart';
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -194,7 +194,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     } else if (index == 2) {
-      // '설정' 탭을 눌렀을 때 처리
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+          builder: (context) => ChatScreen(),
+        ),
+      );
     }
   }
 }
