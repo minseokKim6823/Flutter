@@ -9,7 +9,7 @@ import 'package:week10_lec/model/schedule_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:week10_lec/screen/login_screen.dart';
 import 'package:week10_lec/add_post_page.dart';
-import 'package:week10_lec/screen/ChatScreen.dart';
+import 'package:week10_lec/screen/chatscreen.dart';
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();

@@ -34,7 +34,7 @@ class ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder(
-              stream: _firestore.collection('messages').snapshots(),
+              stream: _firestore.collection('messages').orderBy('timestamp').snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -42,7 +42,7 @@ class ChatScreenState extends State<ChatScreen> {
                   );
                 }
 
-                var messages = snapshot.data!.docs.reversed;
+                var messages = snapshot.data!.docs;
                 List<MessageBubble> messageBubbles = [];
                 for (var message in messages) {
                   var messageText = message['text'];
@@ -56,11 +56,11 @@ class ChatScreenState extends State<ChatScreen> {
                     isMe: currentUser == messageSender,
                   );
 
-                  messageBubbles.add(messageBubble);
+                  messageBubbles.insert(0, messageBubble);
                 }
 
                 return ListView(
-                  reverse: true,
+                  reverse: true,  // 이 부분을 true로 설정
                   controller: _scrollController,
                   children: messageBubbles,
                 );
@@ -125,9 +125,9 @@ class ChatScreenState extends State<ChatScreen> {
         'timestamp': FieldValue.serverTimestamp(),
       });
       _scrollController.animateTo(
-        0.0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
+          0.0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
       );
     }
   }
