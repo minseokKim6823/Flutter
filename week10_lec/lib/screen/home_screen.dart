@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('모각코'),
+        title: Text('모각코 모집'),
         actions: [
           IconButton(
             onPressed: () async {

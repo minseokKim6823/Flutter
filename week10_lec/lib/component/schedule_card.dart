@@ -118,32 +118,36 @@ class _ScheduleCardState extends State<ScheduleCard> {
     if (user != null) {
       String currentUserEmail = user.email!;
 
+      // Firestore에서 데이터 가져오기
       DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();// 데이터 가져옴
+          await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
 
-      List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []); // 로그인된 이메일이 리스트에 있는지 확인
+      // 현재 로그인된 이메일이 이미 리스트에 있는지 확인
+      List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []);
       if (!existingEmails.contains(currentUserEmail)) {
         existingEmails.add(currentUserEmail);
         print("참여한 사용자 이메일 추가: $currentUserEmail");
 
+        // Firestore에 업데이트된 데이터 저장
         await FirebaseFirestore.instance
             .collection('loggedInUsers')
             .doc(user.uid)
-            .set({'emails': existingEmails});// 데이터 재저장
+            .set({'emails': existingEmails});
         setState(() {
           _membersCount++;
         });
       } else {
-
+        // Show a dialog when the email is already in the list
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              title: Text('중복된 이메일'),
               content: Text('이미 참여한 사용자입니다.'),
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // Close the dialog
                   },
                   child: Text('확인'),
                 ),
@@ -167,17 +171,13 @@ class _Members extends StatelessWidget {
   }) : super(key: key);
 
   Future<int> _getNumberOfMembers() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // Firestore에서 데이터 가져오기
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
+    // Firestore에서 데이터 가져오기
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+    await FirebaseFirestore.instance.collection('loggedInUsers').get();
 
-      // 현재 저장된 데이터의 갯수 반환
-      List<String>? emails = snapshot.data()?['emails']?.cast<String>();
-      return emails?.length ?? 0;
-    }
-    return 0;
+    // 현재 저장된 데이터의 갯수 반환
+    int numberOfMembers = snapshot.size;
+    return numberOfMembers;
   }
 
   @override
@@ -186,7 +186,7 @@ class _Members extends StatelessWidget {
       future: _getNumberOfMembers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(); // 데이터 로딩 중에는 로딩 인디케이터를 보여줄 수 있습니다.
         } else if (snapshot.hasError) {
           return Text('에러 발생: ${snapshot.error}');
         } else {
@@ -194,7 +194,7 @@ class _Members extends StatelessWidget {
           return Positioned(
             child: Text(
 
-              '멤버 수: $numberOfMembers 명 (최대 10명)',
+              '멤버 수: $numberOfMembers 명',
               style: TextStyle(
                 color: PRIMARY_COLOR,
               ),

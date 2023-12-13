@@ -37,7 +37,7 @@ class _AddPostPageState extends State<AddPostPage> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(labelText: '비밀번호'),
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
