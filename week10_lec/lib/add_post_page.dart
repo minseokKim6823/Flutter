@@ -15,7 +15,7 @@ class _AddPostPageState extends State<AddPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Post'),
+        title: Text('게시물 등록'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -25,13 +25,13 @@ class _AddPostPageState extends State<AddPostPage> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(labelText: '제목'),
               ),
               SizedBox(height: 16.0),
               TextField(
                 controller: _bodyController,
                 maxLines: 4,
-                decoration: InputDecoration(labelText: 'Body'),
+                decoration: InputDecoration(labelText: '내용'),
               ),
               SizedBox(height: 16.0),
               TextField(
@@ -62,7 +62,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     );
                   }
                 },
-                child: Text('Save Post'),
+                child: Text('저장'),
               ),
             ],
           ),

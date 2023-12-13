@@ -118,36 +118,32 @@ class _ScheduleCardState extends State<ScheduleCard> {
     if (user != null) {
       String currentUserEmail = user.email!;
 
-      // Firestore에서 데이터 가져오기
       DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();
+          await FirebaseFirestore.instance.collection('loggedInUsers').doc(user.uid).get();// 데이터 가져옴
 
-      // 현재 로그인된 이메일이 이미 리스트에 있는지 확인
-      List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []);
+      List<String> existingEmails = List<String>.from(snapshot.data()?['emails'] ?? []); // 로그인된 이메일이 리스트에 있는지 확인
       if (!existingEmails.contains(currentUserEmail)) {
         existingEmails.add(currentUserEmail);
         print("참여한 사용자 이메일 추가: $currentUserEmail");
 
-        // Firestore에 업데이트된 데이터 저장
         await FirebaseFirestore.instance
             .collection('loggedInUsers')
             .doc(user.uid)
-            .set({'emails': existingEmails});
+            .set({'emails': existingEmails});// 데이터 재저장
         setState(() {
           _membersCount++;
         });
       } else {
-        // Show a dialog when the email is already in the list
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('중복된 이메일'),
               content: Text('이미 참여한 사용자입니다.'),
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.of(context).pop();
                   },
                   child: Text('확인'),
                 ),
@@ -190,7 +186,7 @@ class _Members extends StatelessWidget {
       future: _getNumberOfMembers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // 데이터 로딩 중에는 로딩 인디케이터를 보여줄 수 있습니다.
+          return CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('에러 발생: ${snapshot.error}');
         } else {
